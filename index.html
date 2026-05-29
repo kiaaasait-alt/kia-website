@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kia — Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --snow: rgba(255,255,255,0.88);
+      --accent: #7ee8fa;
+      --accent2: #a78bfa;
+      --glass: rgba(10, 10, 20, 0.55);
+      --glass-border: rgba(255,255,255,0.12);
+      --text: #f0f0f8;
+      --sub: #b0b8cc;
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      font-family: 'Syne', sans-serif;
+      color: var(--text);
+    }
+
+    /* ── VIDEO BACKGROUND ── */
+    #bg-video {
+      position: fixed;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      filter: brightness(0.45) saturate(1.2);
+    }
+
+    /* dark overlay */
+    #overlay {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(160deg, rgba(5,5,20,0.45) 0%, rgba(0,0,0,0.3) 100%);
+      z-index: 1;
+    }
+
+    /* ── SNOWFALL ── */
+    #snow-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* ── MAIN CONTENT ── */
+    main {
+      position: relative;
+      z-index: 3;
+      width: 100%; height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow-y: auto;
+    }
+
+    .card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(18px) saturate(1.4);
+      -webkit-backdrop-filter: blur(18px) saturate(1.4);
+      border-radius: 20px;
+      max-width: 680px;
+      width: 100%;
+      padding: 52px 52px 48px;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.06),
+        0 32px 80px rgba(0,0,0,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+      animation: cardIn 0.9s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(28px) scale(0.97); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    /* avatar placeholder / initials */
+    .avatar {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; font-weight: 800; letter-spacing: -1px;
+      color: #0a0a14;
+      margin-bottom: 28px;
+      box-shadow: 0 0 0 3px rgba(126,232,250,0.25);
+    }
+
+    .tag-line {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+      opacity: 0.85;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -1.5px;
+      margin-bottom: 20px;
+      background: linear-gradient(100deg, #fff 30%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .bio {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--sub);
+      margin-bottom: 36px;
+      font-weight: 400;
+    }
+
+    .bio strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    /* skills row */
+    .skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 40px;
+    }
+
+    .skill-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--glass-border);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      letter-spacing: 0.05em;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .skill-tag:hover {
+      border-color: var(--accent);
+      background: rgba(126,232,250,0.08);
+      color: var(--accent);
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--glass-border), transparent);
+      margin-bottom: 28px;
+    }
+
+    .notoriety {
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: var(--sub);
+    }
+
+    .notoriety h2 {
+      font-size: 0.7rem;
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 12px;
+    }
+
+    .notoriety li {
+      list-style: none;
+      padding-left: 16px;
+      position: relative;
+      margin-bottom: 6px;
+    }
+    .notoriety li::before {
+      content: '›';
+      position: absolute; left: 0;
+      color: var(--accent);
+    }
+
+    @media (max-width: 520px) {
+      .card { padding: 36px 28px 32px; }
+      h1 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <video id="bg-video" autoplay muted loop playsinline>
+    <source src="Download.mp4" type="video/mp4" />
+  </video>
+
+  <div id="overlay"></div>
+
+  <div id="unmute-btn" style="
+    position:fixed;bottom:24px;right:24px;z-index:10;
+    background:rgba(10,10,20,0.72);border:1px solid rgba(255,255,255,0.15);
+    backdrop-filter:blur(10px);border-radius:999px;
+    padding:10px 20px;color:#f0f0f8;
+    font-family:'DM Mono',monospace;font-size:0.75rem;
+    letter-spacing:0.1em;cursor:pointer;
+    display:flex;align-items:center;gap:8px;">
+    <span id="mute-icon">🔇</span>
+    <span id="mute-label">CLICK TO UNMUTE</span>
+  </div>
+
+  <canvas id="snow-canvas"></canvas>
+
+  <main>
+    <div class="card">
+      <div class="avatar">K</div>
+      <p class="tag-line">// profile</p>
+      <h1>Kia</h1>
+      <p class="bio">
+        <strong>Kia</strong> is a well-known modder and independent developer with a reputation built
+        across gaming communities and technical circles alike. Best recognized for deep expertise in
+        the <strong>animal company</strong> modding scene, Kia has spent years dissecting, extending,
+        and rebuilding game systems that most people wouldn't dare touch — and sharing that knowledge
+        freely with anyone who'd listen.
+      </p>
+
+      <div class="skills">
+        <span class="skill-tag">C++</span>
+        <span class="skill-tag">C#</span>
+        <span class="skill-tag">TypeScript</span>
+        <span class="skill-tag">Modding</span>
+        <span class="skill-tag">Reverse Engineering</span>
+        <span class="skill-tag">Game Dev</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="notoriety">
+        <h2>Known for</h2>
+        <ul>
+          <li>Pioneering modding documentation for Animal Company</li>
+          <li>Open-source tools used by the broader modding community</li>
+          <li>Low-level systems work in C++ spanning game hooks and runtime patching</li>
+          <li>Clean, readable TypeScript tooling built for community use</li>
+          <li>Consistently sharing knowledge — no gatekeeping</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // ── SNOWFALL ──
+    const canvas = document.getElementById('snow-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let W, H, flakes;
+
+    function resize() {
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+
+    function makeFlake() {
+      return {
+        x: Math.random() * W,
+        y: Math.random() * -H,
+        r: Math.random() * 3.5 + 1,
+        speed: Math.random() * 1.2 + 0.4,
+        drift: (Math.random() - 0.5) * 0.6,
+        opacity: Math.random() * 0.55 + 0.3,
+        wobble: Math.random() * Math.PI * 2,
+        wobbleSpeed: Math.random() * 0.02 + 0.005,
+      };
+    }
+
+    function initFlakes(n = 200) {
+      flakes = Array.from({ length: n }, () => {
+        const f = makeFlake();
+        f.y = Math.random() * H; // scatter on load
+        return f;
+      });
+    }
+
+    function step() {
+      ctx.clearRect(0, 0, W, H);
+      for (const f of flakes) {
+        f.wobble += f.wobbleSpeed;
+        f.x += Math.sin(f.wobble) * 0.5 + f.drift;
+        f.y += f.speed;
+
+        if (f.y > H + 10) {
+          Object.assign(f, makeFlake());
+        }
+
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${f.opacity})`;
+        ctx.fill();
+      }
+      requestAnimationFrame(step);
+    }
+
+    window.addEventListener('resize', () => { resize(); });
+    resize();
+    initFlakes();
+    step();
+
+    // ── UNMUTE TOGGLE ──
+    const video = document.getElementById('bg-video');
+    const btn   = document.getElementById('unmute-btn');
+    const icon  = document.getElementById('mute-icon');
+    const label = document.getElementById('mute-label');
+
+    function toggleMute() {
+      video.muted = !video.muted;
+      if (!video.muted) {
+        video.play();
+        icon.textContent  = '🔊';
+        label.textContent = 'MUTE';
+      } else {
+        icon.textContent  = '🔇';
+        label.textContent = 'CLICK TO UNMUTE';
+      }
+    }
+
+    btn.addEventListener('click', toggleMute);
+  </script>
+
+</body>
+</html>
