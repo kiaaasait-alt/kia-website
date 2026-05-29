@@ -3,17 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kia — Profile</title>
+  <title>Kia</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --snow: rgba(255,255,255,0.88);
       --accent: #7ee8fa;
       --accent2: #a78bfa;
-      --glass: rgba(10, 10, 20, 0.55);
-      --glass-border: rgba(255,255,255,0.12);
+      --glass: rgba(10,10,20,0.55);
+      --gb: rgba(255,255,255,0.12);
       --text: #f0f0f8;
       --sub: #b0b8cc;
     }
@@ -25,7 +24,6 @@
       color: var(--text);
     }
 
-    /* ── VIDEO BACKGROUND ── */
     #bg-video {
       position: fixed;
       inset: 0;
@@ -35,7 +33,6 @@
       filter: brightness(0.45) saturate(1.2);
     }
 
-    /* dark overlay */
     #overlay {
       position: fixed;
       inset: 0;
@@ -43,7 +40,6 @@
       z-index: 1;
     }
 
-    /* ── SNOWFALL ── */
     #snow-canvas {
       position: fixed;
       inset: 0;
@@ -51,7 +47,6 @@
       pointer-events: none;
     }
 
-    /* ── MAIN CONTENT ── */
     main {
       position: relative;
       z-index: 3;
@@ -65,17 +60,14 @@
 
     .card {
       background: var(--glass);
-      border: 1px solid var(--glass-border);
+      border: 1px solid var(--gb);
       backdrop-filter: blur(18px) saturate(1.4);
       -webkit-backdrop-filter: blur(18px) saturate(1.4);
       border-radius: 20px;
       max-width: 680px;
       width: 100%;
       padding: 52px 52px 48px;
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,0.06),
-        0 32px 80px rgba(0,0,0,0.6),
-        inset 0 1px 0 rgba(255,255,255,0.1);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 32px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
       animation: cardIn 0.9s cubic-bezier(.22,1,.36,1) both;
     }
 
@@ -84,7 +76,6 @@
       to   { opacity: 1; transform: none; }
     }
 
-    /* avatar placeholder / initials */
     .avatar {
       width: 80px; height: 80px;
       border-radius: 50%;
@@ -123,15 +114,10 @@
       line-height: 1.75;
       color: var(--sub);
       margin-bottom: 36px;
-      font-weight: 400;
     }
 
-    .bio strong {
-      color: var(--text);
-      font-weight: 700;
-    }
+    .bio strong { color: var(--text); font-weight: 700; }
 
-    /* skills row */
     .skills {
       display: flex;
       flex-wrap: wrap;
@@ -144,11 +130,11 @@
       font-size: 0.78rem;
       padding: 6px 14px;
       border-radius: 999px;
-      border: 1px solid var(--glass-border);
+      border: 1px solid var(--gb);
       background: rgba(255,255,255,0.06);
       color: var(--text);
       letter-spacing: 0.05em;
-      transition: border-color 0.2s, background 0.2s;
+      transition: border-color 0.2s, background 0.2s, color 0.2s;
     }
 
     .skill-tag:hover {
@@ -159,15 +145,11 @@
 
     .divider {
       height: 1px;
-      background: linear-gradient(90deg, transparent, var(--glass-border), transparent);
+      background: linear-gradient(90deg, transparent, var(--gb), transparent);
       margin-bottom: 28px;
     }
 
-    .notoriety {
-      font-size: 0.9rem;
-      line-height: 1.7;
-      color: var(--sub);
-    }
+    .notoriety { font-size: 0.9rem; line-height: 1.7; color: var(--sub); }
 
     .notoriety h2 {
       font-size: 0.7rem;
@@ -184,11 +166,52 @@
       position: relative;
       margin-bottom: 6px;
     }
+
     .notoriety li::before {
       content: '›';
       position: absolute; left: 0;
       color: var(--accent);
     }
+
+    .views-badge {
+      margin-top: 28px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      color: rgba(176,184,204,0.6);
+      text-transform: uppercase;
+    }
+
+    .views-badge span {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    #sound-btn {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      z-index: 10;
+      background: rgba(10,10,20,0.72);
+      border: 1px solid rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 999px;
+      padding: 10px 20px;
+      color: #f0f0f8;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: border-color 0.2s;
+      user-select: none;
+    }
+
+    #sound-btn:hover { border-color: var(--accent); }
 
     @media (max-width: 520px) {
       .card { padding: 36px 28px 32px; }
@@ -203,19 +226,6 @@
   </video>
 
   <div id="overlay"></div>
-
-  <div id="unmute-btn" style="
-    position:fixed;bottom:24px;right:24px;z-index:10;
-    background:rgba(10,10,20,0.72);border:1px solid rgba(255,255,255,0.15);
-    backdrop-filter:blur(10px);border-radius:999px;
-    padding:10px 20px;color:#f0f0f8;
-    font-family:'DM Mono',monospace;font-size:0.75rem;
-    letter-spacing:0.1em;cursor:pointer;
-    display:flex;align-items:center;gap:8px;">
-    <span id="mute-icon">🔇</span>
-    <span id="mute-label">CLICK TO UNMUTE</span>
-  </div>
-
   <canvas id="snow-canvas"></canvas>
 
   <main>
@@ -226,7 +236,7 @@
       <p class="bio">
         <strong>Kia</strong> is a well-known modder and independent developer with a reputation built
         across gaming communities and technical circles alike. Best recognized for deep expertise in
-        the <strong>animal company</strong> modding scene, Kia has spent years dissecting, extending,
+        the <strong>Animal Company</strong> modding scene, Kia has spent years dissecting, extending,
         and rebuilding game systems that most people wouldn't dare touch — and sharing that knowledge
         freely with anyone who'd listen.
       </p>
@@ -252,18 +262,23 @@
           <li>Consistently sharing knowledge — no gatekeeping</li>
         </ul>
       </div>
+
+      <div class="views-badge">👁 <span id="view-count">—</span> views</div>
     </div>
   </main>
 
+  <div id="sound-btn">
+    <span id="snd-icon">🔊</span>
+    <span id="snd-label">MUTE</span>
+  </div>
+
   <script>
-    // ── SNOWFALL ──
     const canvas = document.getElementById('snow-canvas');
     const ctx = canvas.getContext('2d');
-
     let W, H, flakes;
 
     function resize() {
-      W = canvas.width  = window.innerWidth;
+      W = canvas.width = window.innerWidth;
       H = canvas.height = window.innerHeight;
     }
 
@@ -283,7 +298,7 @@
     function initFlakes(n = 200) {
       flakes = Array.from({ length: n }, () => {
         const f = makeFlake();
-        f.y = Math.random() * H; // scatter on load
+        f.y = Math.random() * H;
         return f;
       });
     }
@@ -294,11 +309,7 @@
         f.wobble += f.wobbleSpeed;
         f.x += Math.sin(f.wobble) * 0.5 + f.drift;
         f.y += f.speed;
-
-        if (f.y > H + 10) {
-          Object.assign(f, makeFlake());
-        }
-
+        if (f.y > H + 10) Object.assign(f, makeFlake());
         ctx.beginPath();
         ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(255,255,255,${f.opacity})`;
@@ -307,30 +318,31 @@
       requestAnimationFrame(step);
     }
 
-    window.addEventListener('resize', () => { resize(); });
+    window.addEventListener('resize', resize);
     resize();
     initFlakes();
     step();
 
-    // ── UNMUTE TOGGLE ──
     const video = document.getElementById('bg-video');
-    const btn   = document.getElementById('unmute-btn');
-    const icon  = document.getElementById('mute-icon');
-    const label = document.getElementById('mute-label');
+    const btn = document.getElementById('sound-btn');
+    const icon = document.getElementById('snd-icon');
+    const label = document.getElementById('snd-label');
 
-    function toggleMute() {
+    video.addEventListener('canplay', () => {
+      video.muted = false;
+      video.play().catch(() => { video.muted = true; });
+    });
+
+    btn.addEventListener('click', () => {
       video.muted = !video.muted;
-      if (!video.muted) {
-        video.play();
-        icon.textContent  = '🔊';
-        label.textContent = 'MUTE';
-      } else {
-        icon.textContent  = '🔇';
-        label.textContent = 'CLICK TO UNMUTE';
-      }
-    }
+      icon.textContent = video.muted ? '🔇' : '🔊';
+      label.textContent = video.muted ? 'UNMUTE' : 'MUTE';
+    });
 
-    btn.addEventListener('click', toggleMute);
+    const key = 'kia_views';
+    const count = parseInt(localStorage.getItem(key) || '0') + 1;
+    localStorage.setItem(key, count);
+    document.getElementById('view-count').textContent = count.toLocaleString();
   </script>
 
 </body>
