@@ -328,12 +328,21 @@
     const icon = document.getElementById('snd-icon');
     const label = document.getElementById('snd-label');
 
-    video.addEventListener('canplay', () => {
+    let unlocked = false;
+
+    function unlock() {
+      if (unlocked) return;
+      unlocked = true;
       video.muted = false;
-      video.play().catch(() => { video.muted = true; });
-    });
+      video.play();
+      icon.textContent = '🔊';
+      label.textContent = 'MUTE';
+    }
+
+    document.addEventListener('click', unlock, { once: true });
 
     btn.addEventListener('click', () => {
+      if (!unlocked) { unlock(); return; }
       video.muted = !video.muted;
       icon.textContent = video.muted ? '🔇' : '🔊';
       label.textContent = video.muted ? 'UNMUTE' : 'MUTE';
